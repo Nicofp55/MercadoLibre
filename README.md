@@ -1,4 +1,5 @@
 !----------------------------------  Documentación ----------------------------------!
+
 Explicación del script:
 El script index.php genera un archivo LOG sobre los datos de los items en venta de un usuario de la plataforma de Mercado Libre. Estos datos son consultados a la api de Mercado libre y volcados sobre el archivo. Es posible hacer la búsqueda sin usuario, que traerá por defecto el usuario pedido por el examen, como también indicar uno o múltiples usuarios a los que se consultarán sus datos.
 
