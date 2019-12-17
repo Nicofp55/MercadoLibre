@@ -27,20 +27,19 @@
 	// Declaración de Funciones
 	function fetch($user_id, $site_id){
 		$today = date('Y-m-d');
-		$json = file_get_contents('https://api.mercadolibre.com/sites/'.$site_id.'/search?seller_id='.$user_id);
-		$categories = file_get_contents('https://api.mercadolibre.com/sites/'.$site_id.'/categories');
-		$categories = json_decode($categories, TRUE);
-		$log = fopen('.\\logs\\'.$today.'-articles-'.$user_id.'.log', "a+");
+		$json = file_get_contents('https://api.mercadolibre.com/sites/'.$site_id.'/search?seller_id='.$user_id.'&search_type=scan');
+		
+		$log = fopen('.\\logs\\'.$today.'-articles-'.$user_id.'.log', "w");
 		$json = json_decode($json, TRUE);
 		$text = "----- START OF USER_ID : ".$user_id." DATA ------ \n";
 		
+		print_r($json);
 		foreach($json['results'] as $value){
 			$text .= 'id: '. $value['id']. ', title: '.$value['title'].', category_id: '.$value['category_id'];
-			foreach($categories as $category){
-				if($value['category_id'] === $category['id']){
-					$text .= ', category_name: '.$category['name'];
-				}
-			}
+			$jsoncategory = file_get_contents('https://api.mercadolibre.com/categories/'.$value['category_id']);
+			$category = json_decode($jsoncategory, true);
+			$text .= ', category_name: '.$category['name'];
+			
 			$text .= "\n";
 		}
 		$text .= "----------- END OF USER_ID: ".$user_id." DATA ---------- \n";
@@ -48,12 +47,13 @@
 	}
 
 	function search($user_id,  $site_id){
-		
-		if(is_array($user_id['u'])){
+
+		if(is_array($user_id) && is_array($user_id['u'])){
 			foreach($user_id['u'] as $user){
 				fetch($user, $site_id);
 			}
 		}else{
+			
 			fetch($user_id['u'], $site_id);
 		}
 		
@@ -65,5 +65,5 @@
 	if($users){
 		search($users, 'MLA');	
 	}else{
-		search('179571326', 'MLA');
+		search(array('u' =>'179571326'), 'MLA');
 	}
