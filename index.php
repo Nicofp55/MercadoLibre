@@ -33,7 +33,6 @@
 		$json = json_decode($json, TRUE);
 		$text = "----- START OF USER_ID : ".$user_id." DATA ------ \n";
 		
-		print_r($json);
 		foreach($json['results'] as $value){
 			$text .= 'id: '. $value['id']. ', title: '.$value['title'].', category_id: '.$value['category_id'];
 			$jsoncategory = file_get_contents('https://api.mercadolibre.com/categories/'.$value['category_id']);
